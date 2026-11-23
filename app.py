@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 import streamlit as st
 
 # ==============================================================================
-# 1. PAGE CONFIGURATION & THEME STYLING
+# 1. PAGE CONFIGURATION & THEME STYLING (DARK & LIGHT MODE ADAPTIVE)
 # ==============================================================================
 st.set_page_config(
     page_title="Iris AI Studio | Multiclass Classification",
@@ -25,7 +25,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for modern AI Analytics Dashboard
+# Custom CSS for seamless Dark & Light theme compatibility
 st.markdown("""
 <style>
     /* Google Fonts & Base Styling */
@@ -35,37 +35,44 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
-    .main {
-        background-color: #F8FAFC;
-    }
-    
-    /* Header Card */
+    /* Header Card - Vibrant & High Contrast in both Dark and Light themes */
     .studio-header {
         background: linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #4338CA 100%);
-        color: white;
+        color: #FFFFFF !important;
         padding: 2rem 2.5rem;
         border-radius: 18px;
         margin-bottom: 2rem;
-        box-shadow: 0 10px 25px -5px rgba(67, 56, 202, 0.25);
+        box-shadow: 0 10px 25px -5px rgba(67, 56, 202, 0.35);
     }
     .studio-header h1 {
         font-weight: 800;
         font-size: 2.2rem;
         margin-bottom: 0.3rem;
         letter-spacing: -0.02em;
-        color: #FFFFFF;
+        color: #FFFFFF !important;
     }
     .studio-header p {
-        color: #E0E7FF;
+        color: #E0E7FF !important;
         font-size: 1.05rem;
         margin: 0;
         opacity: 0.95;
     }
     
-    /* Stat Cards */
+    /* Section Subheaders - Automatically adapts to theme text color */
+    .section-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--text-color) !important;
+        margin: 1.6rem 0 1rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    /* Stat / KPI Cards - Adaptive background & text */
     .kpi-card {
-        background: #FFFFFF;
-        border: 1px solid #E2E8F0;
+        background-color: var(--secondary-background-color) !important;
+        border: 1px solid rgba(128, 128, 128, 0.22) !important;
         border-radius: 14px;
         padding: 1.3rem 1.5rem;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -73,32 +80,33 @@ st.markdown("""
     }
     .kpi-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
     .kpi-title {
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: #64748B;
+        color: var(--text-color) !important;
+        opacity: 0.75;
         margin-bottom: 0.4rem;
     }
     .kpi-value {
         font-size: 1.9rem;
         font-weight: 800;
-        color: #0F172A;
+        color: var(--text-color) !important;
     }
     .kpi-sub {
         font-size: 0.8rem;
-        color: #10B981;
+        color: #10B981 !important;
         font-weight: 600;
         margin-top: 0.2rem;
     }
     
-    /* Model Performance Cards */
+    /* Model Performance Cards - Adaptive background & explicit readable text */
     .model-card {
-        background: #FFFFFF;
-        border: 1px solid #E2E8F0;
+        background-color: var(--secondary-background-color) !important;
+        border: 1px solid rgba(128, 128, 128, 0.22) !important;
         border-radius: 16px;
         padding: 1.5rem;
         height: 100%;
@@ -106,15 +114,15 @@ st.markdown("""
         position: relative;
     }
     .model-card.featured {
-        border: 2px solid #6366F1;
-        background: linear-gradient(180deg, #FFFFFF 0%, #EEF2FF 100%);
+        border: 2px solid #6366F1 !important;
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2) !important;
     }
     .badge-top {
         position: absolute;
         top: 1rem;
         right: 1rem;
         background: #4F46E5;
-        color: white;
+        color: #FFFFFF !important;
         padding: 0.25rem 0.65rem;
         border-radius: 20px;
         font-size: 0.72rem;
@@ -122,24 +130,68 @@ st.markdown("""
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }
-    
-    /* Prediction Banner */
-    .prediction-box {
-        background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
-        border: 2px solid #86EFAC;
-        border-radius: 16px;
-        padding: 1.5rem 2rem;
-        color: #14532D;
-        margin-top: 1.5rem;
+    .model-card h3 {
+        color: var(--text-color) !important;
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-top: 0;
+        margin-bottom: 0.3rem;
+    }
+    .model-card p {
+        color: var(--text-color) !important;
+        opacity: 0.85;
+    }
+    .model-card hr {
+        border: none !important;
+        border-top: 1px solid rgba(128, 128, 128, 0.22) !important;
+        margin: 1rem 0 !important;
     }
     
-    /* Workflow Steps */
+    /* Prediction Banner - Vibrant & readable in both light and dark themes */
+    .prediction-box {
+        background: rgba(16, 185, 129, 0.12) !important;
+        border: 2px solid #10B981 !important;
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        margin-top: 1.5rem;
+    }
+    .prediction-box h2 {
+        color: #10B981 !important;
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 0.2rem 0;
+    }
+    .prediction-box p {
+        color: var(--text-color) !important;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+    .prediction-status-card {
+        background-color: var(--secondary-background-color) !important;
+        border: 1px solid rgba(128, 128, 128, 0.25) !important;
+        border-radius: 12px;
+        padding: 0.8rem 1.4rem;
+        text-align: right;
+    }
+    
+    /* Input Summary Box */
+    .summary-box {
+        background-color: var(--secondary-background-color) !important;
+        border: 1px solid rgba(128, 128, 128, 0.25) !important;
+        border-radius: 12px;
+        padding: 1rem;
+        font-size: 0.85rem;
+        color: var(--text-color) !important;
+        margin-top: 1rem;
+    }
+    
+    /* Workflow Steps - Adaptive container & steps */
     .workflow-container {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background: #FFFFFF;
-        border: 1px solid #E2E8F0;
+        background-color: var(--secondary-background-color) !important;
+        border: 1px solid rgba(128, 128, 128, 0.22) !important;
         border-radius: 14px;
         padding: 1.2rem 1.8rem;
         margin: 1.5rem 0;
@@ -149,28 +201,21 @@ st.markdown("""
         text-align: center;
         font-weight: 600;
         font-size: 0.85rem;
-        color: #334155;
+        color: var(--text-color) !important;
     }
     .workflow-step .step-icon {
         font-size: 1.5rem;
         margin-bottom: 0.3rem;
         display: block;
     }
-    .workflow-arrow {
-        color: #94A3B8;
-        font-size: 1.2rem;
-        font-weight: 700;
+    .workflow-step span {
+        color: var(--text-color) !important;
+        opacity: 0.72;
     }
-    
-    /* Section Subheaders */
-    .section-title {
-        font-size: 1.35rem;
+    .workflow-arrow {
+        color: #818CF8 !important;
+        font-size: 1.3rem;
         font-weight: 700;
-        color: #0F172A;
-        margin: 1.5rem 0 1rem 0;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -281,7 +326,7 @@ with st.sidebar:
             
     st.write("---")
     st.markdown("""
-    <div style='font-size: 0.8rem; color: #64748B; line-height: 1.4;'>
+    <div style='font-size: 0.8rem; opacity: 0.75; line-height: 1.4;'>
         <strong>GenAI Model Making Project</strong><br/>
         Topic 31 | Group 16 | Class: LYCORE 2<br/>
         MIT School of Computing, Pune<br/>
@@ -342,12 +387,12 @@ if menu_selection == "📊 Home Dashboard":
     with m_col1:
         st.markdown("""
         <div class="model-card">
-            <h3 style="margin-top:0; color:#1E293B; font-weight:700;">Logistic Regression</h3>
-            <p style="color:#64748B; font-size:0.9rem;">Probabilistic linear multiclass classifier</p>
-            <div style="font-size:2rem; font-weight:800; color:#2563EB;">96.67%</div>
-            <p style="color:#475569; font-weight:600; margin-top:0.3rem;">Test Accuracy: 29 / 30 correct</p>
-            <hr style="border:none; border-top:1px solid #E2E8F0; margin:1rem 0;"/>
-            <span style="font-size:0.8rem; color:#64748B;">max_iter=200 | Solved via lbfgs</span>
+            <h3>Logistic Regression</h3>
+            <p style="font-size:0.9rem; opacity:0.85;">Probabilistic linear multiclass classifier</p>
+            <div style="font-size:2rem; font-weight:800; color:#3B82F6;">96.67%</div>
+            <p style="font-weight:600; margin-top:0.3rem;">Test Accuracy: 29 / 30 correct</p>
+            <hr/>
+            <span style="font-size:0.8rem; opacity:0.75;">max_iter=200 | Solved via lbfgs</span>
         </div>
         """, unsafe_allow_html=True)
         
@@ -355,24 +400,24 @@ if menu_selection == "📊 Home Dashboard":
         st.markdown("""
         <div class="model-card featured">
             <div class="badge-top">Top Performer</div>
-            <h3 style="margin-top:0; color:#1E293B; font-weight:700;">k-Nearest Neighbors</h3>
-            <p style="color:#64748B; font-size:0.9rem;">Distance-based instance classification (k=5)</p>
-            <div style="font-size:2rem; font-weight:800; color:#059669;">100.00%</div>
-            <p style="color:#047857; font-weight:600; margin-top:0.3rem;">Test Accuracy: 30 / 30 correct</p>
-            <hr style="border:none; border-top:1px solid #C7D2FE; margin:1rem 0;"/>
-            <span style="font-size:0.8rem; color:#4338CA; font-weight:600;">Highest performance on test split</span>
+            <h3>k-Nearest Neighbors</h3>
+            <p style="font-size:0.9rem; opacity:0.85;">Distance-based instance classification (k=5)</p>
+            <div style="font-size:2rem; font-weight:800; color:#10B981;">100.00%</div>
+            <p style="color:#10B981; font-weight:600; margin-top:0.3rem;">Test Accuracy: 30 / 30 correct</p>
+            <hr/>
+            <span style="font-size:0.8rem; color:#818CF8; font-weight:600;">Highest performance on test split</span>
         </div>
         """, unsafe_allow_html=True)
         
     with m_col3:
         st.markdown("""
         <div class="model-card">
-            <h3 style="margin-top:0; color:#1E293B; font-weight:700;">Decision Tree</h3>
-            <p style="color:#64748B; font-size:0.9rem;">Recursive feature-rule hierarchical split</p>
-            <div style="font-size:2rem; font-weight:800; color:#D97706;">93.33%</div>
-            <p style="color:#475569; font-weight:600; margin-top:0.3rem;">Test Accuracy: 28 / 30 correct</p>
-            <hr style="border:none; border-top:1px solid #E2E8F0; margin:1rem 0;"/>
-            <span style="font-size:0.8rem; color:#64748B;">random_state=42 | Axis-aligned splits</span>
+            <h3>Decision Tree</h3>
+            <p style="font-size:0.9rem; opacity:0.85;">Recursive feature-rule hierarchical split</p>
+            <div style="font-size:2rem; font-weight:800; color:#F59E0B;">93.33%</div>
+            <p style="font-weight:600; margin-top:0.3rem;">Test Accuracy: 28 / 30 correct</p>
+            <hr/>
+            <span style="font-size:0.8rem; opacity:0.75;">random_state=42 | Axis-aligned splits</span>
         </div>
         """, unsafe_allow_html=True)
 
@@ -384,8 +429,7 @@ if menu_selection == "📊 Home Dashboard":
         # Accuracy Bar Chart
         acc_df = pd.DataFrame({
             'Model': ['kNN (k=5)', 'Logistic Regression', 'Decision Tree'],
-            'Accuracy': [100.00, 96.67, 93.33],
-            'Color': ['#10B981', '#3B82F6', '#F59E0B']
+            'Accuracy': [100.00, 96.67, 93.33]
         })
         fig_acc = px.bar(
             acc_df, x='Model', y='Accuracy', text='Accuracy',
@@ -417,32 +461,32 @@ if menu_selection == "📊 Home Dashboard":
     <div class="workflow-container">
         <div class="workflow-step">
             <span class="step-icon">📂</span>
-            1. Iris Dataset<br/><span style="font-size:0.75rem; color:#64748B;">150 Botanical Samples</span>
+            1. Iris Dataset<br/><span style="font-size:0.75rem;">150 Botanical Samples</span>
         </div>
         <div class="workflow-arrow">➔</div>
         <div class="workflow-step">
             <span class="step-icon">⚙️</span>
-            2. Preprocessing<br/><span style="font-size:0.75rem; color:#64748B;">Stratified 80/20 Split</span>
+            2. Preprocessing<br/><span style="font-size:0.75rem;">Stratified 80/20 Split</span>
         </div>
         <div class="workflow-arrow">➔</div>
         <div class="workflow-step">
             <span class="step-icon">🧠</span>
-            3. Model Training<br/><span style="font-size:0.75rem; color:#64748B;">LR, kNN, Decision Tree</span>
+            3. Model Training<br/><span style="font-size:0.75rem;">LR, kNN, Decision Tree</span>
         </div>
         <div class="workflow-arrow">➔</div>
         <div class="workflow-step">
             <span class="step-icon">📊</span>
-            4. Model Evaluation<br/><span style="font-size:0.75rem; color:#64748B;">Accuracy &amp; Confusion Matrix</span>
+            4. Model Evaluation<br/><span style="font-size:0.75rem;">Accuracy &amp; Confusion Matrix</span>
         </div>
         <div class="workflow-arrow">➔</div>
         <div class="workflow-step">
             <span class="step-icon">💾</span>
-            5. Model Persistence<br/><span style="font-size:0.75rem; color:#64748B;">Joblib Serialization (.pkl)</span>
+            5. Model Persistence<br/><span style="font-size:0.75rem;">Joblib Serialization (.pkl)</span>
         </div>
         <div class="workflow-arrow">➔</div>
         <div class="workflow-step">
             <span class="step-icon">🌐</span>
-            6. Real-time Inference<br/><span style="font-size:0.75rem; color:#64748B;">Iris AI Studio Dashboard</span>
+            6. Real-time Inference<br/><span style="font-size:0.75rem;">Iris AI Studio Dashboard</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -537,7 +581,7 @@ elif menu_selection == "🔮 Predict Iris Species":
         )
         
         st.markdown("""
-        <div style="background:#F1F5F9; border-radius:12px; padding:1rem; font-size:0.85rem; color:#475569; margin-top:1rem;">
+        <div class="summary-box">
             <strong>Input Summary Vector:</strong><br/>
             <code>[Sepal L: {:.1f}, Sepal W: {:.1f}, Petal L: {:.1f}, Petal W: {:.1f}]</code>
         </div>
@@ -581,17 +625,17 @@ elif menu_selection == "🔮 Predict Iris Species":
                 # Result Card Display
                 st.markdown(f"""
                 <div class="prediction-box">
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
                         <div>
-                            <span style="font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#15803D;">Classification Result</span>
-                            <h2 style="margin:0.2rem 0; font-size:2.2rem; font-weight:800; color:#14532D;">🌺 {predicted_name}</h2>
-                            <p style="margin:0; font-size:0.95rem; color:#166534;">
+                            <span style="font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#10B981;">Classification Result</span>
+                            <h2 style="margin:0.2rem 0; font-size:2.2rem; font-weight:800; color:#10B981;">🌺 {predicted_name}</h2>
+                            <p style="margin:0; font-size:0.95rem;">
                                 Classified via <strong>{model_choice}</strong> &bull; Estimated Probability: <strong>{top_prob:.1f}%</strong>
                             </p>
                         </div>
-                        <div style="background:#FFFFFF; border:1px solid #BBF7D0; border-radius:12px; padding:0.8rem 1.4rem; text-align:right;">
-                            <span style="font-size:0.75rem; color:#64748B; font-weight:600;">Status</span><br/>
-                            <span style="font-weight:700; color:#059669; font-size:1.1rem;">Inference Complete ✅</span>
+                        <div class="prediction-status-card">
+                            <span style="font-size:0.75rem; opacity:0.75; font-weight:600;">Status</span><br/>
+                            <span style="font-weight:700; color:#10B981; font-size:1.05rem;">Inference Complete ✅</span>
                         </div>
                     </div>
                 </div>
